@@ -54,10 +54,10 @@ p {
     font-weight: 700;
     padding: .5rem 4rem;
 }
-.error {
+.errors {
     background-color: #f44336;
 }
-.exito {
+.success {
     background-color: rgb(94, 156, 0);
 }
 
