@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+	<link href="https://fonts.googleapis.com/css?family=Raleway:400,700,900|Staatliches" rel="stylesheet">
+	<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+	<header class="site-header contenedor">
+		<a href="/">
+			<img src="/img/logo.png" alt="Logo Meeti">
+		</a>
+
+		<nav class="nav">
+			<a href="#">Crear Grupo</a>
+			<a href="#">Iniciar Sesión</a>
+			<a href="/create-account">Registrarse</a>
+		</nav>
+	</header>
+
+	<%- body %>
+
+	<footer class="site-footer contenedor">
+		<nav class="nav">
+			<a href="#">Crear Grupo</a>
+			<a href="#">Iniciar Sesión</a>
+			<a href="/create-account">Registrarse</a>
+		</nav>
+
+		<p>Todos los derechos reservados <%- locals.year %></p>
+	</footer>
+</body>
+</html>
