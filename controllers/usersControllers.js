@@ -80,3 +80,20 @@ exports.showSignIn = (req, res) => {
 exports.signIn = (req, res) => {
   res.send('Listo para iniciar sesión :0');
 };
+
+exports.confirmAccount = async (req, res, next) => {
+  const user = await Users.findOne({where: {email: req.params.email}});
+
+  // Si el usuario no existe redireccionamos a crear una cuenta
+  if (!user) {
+    req.flash('errors', 'No existe la cuenta. Debes crear una');
+    res.redirect('/create-account');
+    return next();
+  }
+
+  // Si el usuario existe cambiamos su status a activo
+  user.active = 1;
+  await user.save();
+  req.flash('success', 'Cuenta confirmada correctamente');
+  res.redirect('/sign-in');
+};
