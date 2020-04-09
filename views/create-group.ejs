@@ -1,7 +1,8 @@
 <main class="contenedor contenedor-formularios no-padding">
   <h1><%= pageName %></h1>
 
-  <form class="default-form" action="/create-group" method="POST">
+  <!-- Usamos enctype para poder subir archivos -->
+  <form class="default-form" action="/create-group" method="POST" enctype="multipart/form-data">
     <div class="campo">
       <label for="name">Nombre</label>
       <input type="text" name="name" placeholder="Nombre del Grupo">

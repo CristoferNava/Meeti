@@ -25,6 +25,11 @@ module.exports = function() {
     authControllers.isAuthenticated, // guardamos la referencia del usuario que creó el grupo
     groupControllers.showCreateGroup,
   );
-  
+  router.post('/create-group',
+    authControllers.isAuthenticated,
+    groupControllers.uploadImage,
+    groupControllers.createGroup
+  );  
+
   return router;
 };
