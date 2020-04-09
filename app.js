@@ -8,6 +8,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
 const routes = require('./routes/routes');
+const passports = require('./config/passport');
 
 // Configuración de la base de datos
 const db = require('./config/db');
@@ -44,6 +45,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
+// Habilitamos passport
+app.use(passports.initialize());
+app.use(passports.session());
 
 // Habilitamos flash
 app.use(flash());

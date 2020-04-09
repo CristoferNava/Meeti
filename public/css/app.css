@@ -57,6 +57,9 @@ p {
 .errors {
     background-color: #f44336;
 }
+.error {
+    background-color: #f44336;
+}
 .success {
     background-color: rgb(94, 156, 0);
 }

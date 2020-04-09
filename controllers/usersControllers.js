@@ -77,10 +77,6 @@ exports.showSignIn = (req, res) => {
   });
 };
 
-exports.signIn = (req, res) => {
-  res.send('Listo para iniciar sesión :0');
-};
-
 exports.confirmAccount = async (req, res, next) => {
   const user = await Users.findOne({where: {email: req.params.email}});
 
