@@ -12,33 +12,17 @@ exports.createAccount = async (req, res, next) => {
 
   // Usamos express-validator
   req.checkBody('confirmPass', 'Tienes que confimar la contraseña').notEmpty();
-  req.checkBody('confirmPass', 'Las contraseñas no coinciden').equals(req.body.password);
-  
-  // const myValidation = [];
-  // if (user.password !== user.confirmPass) {
-  //   myValidation.push('Contreseñas diferentes');
-  // }
-  // console.log(user.confirmPass);
-  // if (!user.confirmPass) {
-  //   myValidation.push('No puede ir vacío');
-  // }
-
-  // if (myValidation) {
-  //   req.flash('errors', myValidation); // errors es la key y sequelizeErrors el value
-    
-  //   // en el objeto de flash
-  //   res.redirect('/');
-  //   console.log(myValidation);
-  //   next();
-  // }
-
+  req.checkBody('confirmPass', 'Las contraseñas no coinciden').equals(req.body.password); 
+  const expressErrorsList = req.validationErrors();  
   // Leemos los errores de express
   // Cuidado con el bug, si hay errores devuelve un arreglo con objetos dentro,
   // sino devuelve false
-  // const expressErrorsList = req.validationErrors();
-  // console.log(expressErrorsList);
 
   try {
+    // Revisamos si hay errores en express-validator
+    if (expressErrorsList) {
+      throw 'OnlyExpressErrors'
+    }
     await Users.create(user);
 
     // Generamos la URL de confirmación de cuenta
@@ -56,21 +40,27 @@ exports.createAccount = async (req, res, next) => {
     req.flash('success', 'Hemos enviado un email para que confirmes tu cuenta');
     res.redirect('/sign-in');
   } catch (error) {
-    console.log(error);
+    let sequelizeErrors;
+    if (error === 'OnlyExpressErrors') {
+      console.log('Sólo errores de Express');
+      sequelizeErrors = [];
+    } else { // Errores de Sequelize
+      console.log('Errores de Sequelize');
+      sequelizeErrors = error.errors.map(err => err.message);
+    }
     // Creamos un arreglo de los errores generados por la validación de Sequelize
     // Sequelize los nombra errors y están en error, por eso los extraemos y los listamos
     // en un arreglo
-    const sequelizeErrors = error.errors.map(err => err.message);
 
     // express-validator nombra a los erroes en msg, por lo que debemos extraerlos
     // revisamos si hay errores
-    // let expressErrors = [];
-    // // if (expressErrorsList) {
-    //   expressErrors = expressErrorsList.map(err => err.msg);
-    // // }
+    let expressErrors = [];
+    if (expressErrorsList) {
+      expressErrors = expressErrorsList.map(err => err.msg);
+    }
 
     // Unimos los errores de sequelize y de express en un mismo arreglo
-    const errors = [...sequelizeErrors];
+    const errors = [...sequelizeErrors, ...expressErrors];
 
     // Llenamos locals.messages en el objeto de flash
     req.flash('errors', errors); // errors es la key y sequelizeErrors el value
