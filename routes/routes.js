@@ -4,6 +4,7 @@ const homeControllers = require('../controllers/homeControllers');
 const usersControllers = require('../controllers/usersControllers')
 const authControllers = require('../controllers/authControllers');
 const adminControllers = require('../controllers/adminControllers');
+const groupControllers = require('../controllers/groupsControllers');
 
 module.exports = function() {
   router.get('/', homeControllers.home);
@@ -17,6 +18,12 @@ module.exports = function() {
   router.get('/administration', 
     authControllers.isAuthenticated,
     adminControllers.panelAdmin
+  );
+
+  // Groups
+  router.get('/create-group',
+    authControllers.isAuthenticated, // guardamos la referencia del usuario que creó el grupo
+    groupControllers.showCreateGroup,
   );
   
   return router;

@@ -13,6 +13,7 @@ const passports = require('./config/passport');
 // Configuración de la base de datos
 const db = require('./config/db');
 require('./models/Users');
+require('./models/Categories');
 db.sync()
   .then(() => {console.log('Conexión a la base de datos establecida');})
   .catch((err) => {console.log(err);});
