@@ -30,6 +30,26 @@ module.exports = function() {
     groupControllers.uploadImage,
     groupControllers.createGroup
   );  
+  router.get('/edit-group/:groupID',
+    authControllers.isAuthenticated,
+    groupControllers.showEditGroup,
+  );
+  router.post('/edit-group/:groupID',
+    authControllers.isAuthenticated,
+    groupControllers.editGroup
+  );
+
+  // Edit image group
+  router.get('/group-image/:groupID', 
+    authControllers.isAuthenticated,
+    groupControllers.showEditImage
+  );
+
+  router.post('/group-image/:groupID', 
+    authControllers.isAuthenticated,
+    groupControllers.uploadImage,
+    groupControllers.editImage
+  );
 
   return router;
 };

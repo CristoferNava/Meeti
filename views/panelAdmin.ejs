@@ -44,17 +44,23 @@
   <div class="seccion-admin">
     <h2>Tus Grupos</h2>
     <ul>
-      <li>
-        <div class="informacion-admin">
-          <h3>Asterdots</h3>
-          <small>3 miembros</small>
-        </div>
-        <div class="acciones contenedor-botones">
-          <a href="#" class="btn btn-verde">Editar</a>
-          <a href="#" class="btn btn-azul2">Imagen</a>
-          <a href="#" class="btn btn-rojo">Eliminar</a>
-        </div>
-      </li>
+      <% if (groups.length) { %> 
+        <% groups.forEach(group => { %> 
+          <li>
+            <div class="informacion-admin">
+              <h3><%= group.name %> </h3>
+              <small>3 miembros</small>
+            </div>
+            <div class="acciones contenedor-botones">
+              <a href="/edit-group/<%= group.id %>" class="btn btn-verde">Editar</a>
+              <a href="/group-image/<%= group.id %>" class="btn btn-azul2">Imagen</a>
+              <a href="/remove-group/<%= group.id %>" class="btn btn-rojo">Eliminar</a>
+            </div>
+          </li>
+      <% }) %> 
+    <% } else { %>
+      <p>No tienes grupos creados</p>
+    <% } %>  
     </ul>
   </div>
 </main>

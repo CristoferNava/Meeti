@@ -2,6 +2,7 @@ const multer = require('multer');
 const multerConfig = require('../config/multer');
 const Categories = require('../models/Categories');
 const Groups = require('../models/Groups');
+const fs = require('fs');
 
 const upload = multer(multerConfig).single('image'); // name del form
 exports.uploadImage = (req, res, next) => {
@@ -58,5 +59,78 @@ exports.createGroup = async (req, res) => {
     const errors = error.errors.map(err => err.message);
     req.flash('errors', errors);
     res.redirect('/create-group');
+  }
+};
+
+exports.showEditGroup = async (req, res) => {
+  // Puesto que tenemos consultas independientes no ponemos un await después del otro
+  const querys = [];
+  querys.push(Groups.findByPk(req.params.groupID));
+  querys.push(Categories.findAll());
+  // hacemos un await con promise
+  const [group, categories] = await Promise.all(querys);
+
+  res.render('edit-group', {
+    pageName: 'Editar Grupo',
+    group,
+    categories
+  });
+};
+
+exports.editGroup = async (req, res, next) => {
+  // Obtenemos el grupo a editar de la base de datos
+  const group = await Groups.findOne({where: {id: req.params.groupID, UserId: req.user.id}});
+
+  // Si no existe el grupo o no es el dueño
+  if (!group) {
+    req.flash('errors', 'Error de operación');
+    res.redirect('/administration');
+    return next();
+  }
+
+  // Todo bien, leemos los valores y actualizamos en la base de datos
+  console.log(req.body);
+  const {name, description, category, url} = req.body;
+  group.name = name;
+  group.description = description;
+  group.category = category;
+  group.url = url;
+  await group.save();
+
+  req.flash('success', 'Grupo editado correctamente');
+  res.redirect('/administration');
+};
+
+exports.showEditImage = async (req, res) => {
+  const group = await Groups.findOne({where: {id: req.params.groupID, UserId: req.user.id}});
+
+  res.render('image-group', {
+    pageName: 'Cambiar Imagen',
+    group
+  });
+};
+
+exports.editImage = async (req, res, next) => {
+  const group = await Groups.findOne({where: {id: req.params.groupID, UserId: req.user.id}});
+
+  if (!group) {
+    req.flash(errors, 'Operación no válida');
+    res.redirect('/sign-in');
+    return next();
+  }
+
+  // Si hay una imagen anterior y una nueva tenemos que eliminar la anterior
+  if (group.image && req.file) {
+    const prevImagePath = `${__dirname}/../public/uploads/groups/${group.image}`;
+
+    // Eliminamos la imagen con filesystem
+    fs.unlink(prevImagePath, (err) => {console.log(err);});
+
+    // Si hay una imagen la guardamos
+    if (req.file) group.image = req.file.filename;
+
+    await group.save();
+    req.flash('success', 'Imagen cambiada correctamente');
+    res.redirect('/administration');
   }
 };

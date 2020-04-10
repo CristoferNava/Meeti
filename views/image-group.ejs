@@ -1,0 +1,18 @@
+<main class="contenedor contenedor-formularios no-padding">
+  <h1><%= pageName %></h1>
+
+  <!-- Usamos enctype para poder subir archivos -->
+  <form class="default-form" method="POST" enctype="multipart/form-data">
+    <div class="campo">
+      <label>Imagen</label>
+      <input type="file" name="image">
+    </div>
+    <div class="campo">
+      <label><%= group.image %> </label>
+      <img src="/uploads/groups/<%= group.image %>" width="200">
+    </div>
+    <div class="campo enviar">
+      <input type="submit" value="Cambiar Imagen" class="btn btn-rosa">  
+    </div>
+  </form>
+</main>
