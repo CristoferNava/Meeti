@@ -5,6 +5,7 @@ const usersControllers = require('../controllers/usersControllers')
 const authControllers = require('../controllers/authControllers');
 const adminControllers = require('../controllers/adminControllers');
 const groupControllers = require('../controllers/groupsControllers');
+const meetiControllers = require('../controllers/meetiControllers');
 
 module.exports = function() {
   router.get('/', homeControllers.home);
@@ -44,11 +45,27 @@ module.exports = function() {
     authControllers.isAuthenticated,
     groupControllers.showEditImage
   );
-
   router.post('/group-image/:groupID', 
     authControllers.isAuthenticated,
     groupControllers.uploadImage,
     groupControllers.editImage
+  );
+
+  // Eliminar imagen del grupo
+  router.get('/remove-group/:groupID',
+    authControllers.isAuthenticated,
+    groupControllers.showRemoveGroup
+  );
+
+  router.post('/remove-group/:groupID',
+    authControllers.isAuthenticated,
+    groupControllers.removeGroup,
+  );
+
+  // Meeti routes
+  router.get('/new-meeti', 
+    authControllers.isAuthenticated,
+    meetiControllers.showNewMeeti
   );
 
   return router;

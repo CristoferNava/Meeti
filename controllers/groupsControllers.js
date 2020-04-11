@@ -125,12 +125,51 @@ exports.editImage = async (req, res, next) => {
 
     // Eliminamos la imagen con filesystem
     fs.unlink(prevImagePath, (err) => {console.log(err);});
-
-    // Si hay una imagen la guardamos
-    if (req.file) group.image = req.file.filename;
-
-    await group.save();
-    req.flash('success', 'Imagen cambiada correctamente');
-    res.redirect('/administration');
   }
+
+  // Si hay una imagen la guardamos
+  if (req.file) group.image = req.file.filename;
+
+  await group.save();
+  req.flash('success', 'Imagen cambiada correctamente');
+  res.redirect('/administration');
+};
+
+exports.showRemoveGroup = async (req, res, next) => {
+  const group = await Groups.findOne({where: {id: req.params.groupID, UserId: req.user.id}});
+
+  if (!group) {
+    req.flash(errors, 'Operación no válida');
+    res.redirect('/administration');
+    return next();
+  }
+
+  // todo coo, ejecutamos la vista
+  res.render('remove-group', {
+    pageName: 'Eliminar grupo'
+  });
+};
+
+exports.removeGroup = async (req, res, next) => {
+  const group = await Groups.findOne({where: {id: req.params.groupID, UserId: req.user.id}});
+
+  if (!group) {
+    req.flash(errors, 'Operación no válida');
+    res.redirect('/administration');
+    return next();
+  }
+
+  // Si el grupo tiene imagen asociada la eliminamos
+  if (group.image) {
+    const prevImagePath = `${__dirname}/../public/uploads/groups/${group.image}`;
+
+    // Eliminamos la imagen con filesystem
+    fs.unlink(prevImagePath, (err) => {console.log(err);});
+  }
+
+  // Eliminamos el grupo de la Base Datos
+  await Groups.destroy({where: {id: req.params.groupID}});
+
+  req.flash('success', 'Grupo eliminado con éxito');
+  res.redirect('/administration');
 };
