@@ -630,3 +630,8 @@ aside .ubicacion {
 aside img {
     display: block;
 }
+
+#map {
+    height: 400px;
+    width: 500px;
+}
